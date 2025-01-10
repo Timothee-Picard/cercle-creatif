@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "prepare": "husky",
+    "test": "cd frontend && npm run test:ci"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
