@@ -1,0 +1,29 @@
+name: Run tests
+run-name: ${{ github.actor }} - ${{ github.event_name }} - ${{ github.sha }}
+
+on: [push]
+
+jobs:
+  frontend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22.13.0'
+
+      - name: Install dependencies for frontend
+        run: cd frontend && npm install
+
+      - name: Run tests for frontend
+        run: cd frontend && npm run test:ci
+
+      - name: Upload coverage report
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: ./frontend/coverage
