@@ -1,7 +1,8 @@
 {
   "scripts": {
     "prepare": "husky",
-    "test:ci": "scripts/run-ci.sh"
+    "test:ci": "scripts/run-ci.sh",
+    "format": "scripts/format.sh"
   },
   "devDependencies": {
     "husky": "^9.1.7"
