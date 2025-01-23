@@ -1,5 +1,5 @@
 name: Run tests
-run-name: ${{ github.actor }} - ${{ github.event_name }} - ${{ github.sha }}
+run-name: ${{ github.event_name }} - ${{ github.actor }} - ${{ github.event.head_commit.message }}
 
 on: [push]
 
