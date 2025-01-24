@@ -14,8 +14,8 @@ services:
     environment:
       - BACKEND_URL=http://backend:3000
     networks:
-        - default
-        - backend
+      - default
+      - back-front
     healthcheck:
         test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
         interval: 30s
@@ -28,47 +28,47 @@ services:
       dockerfile: development.Dockerfile
     restart: unless-stopped
     depends_on:
-      database-mongo:
+      database:
         condition: service_healthy
     volumes:
       - ./backend:/app
     environment:
       - DB_TYPE=mongodb
-      - DB_HOST=database-mongo
+      - DB_HOST=database
       - DB_PORT=27017
-      - DB_DATABASE=${MONGO_DATABASE}
-      - DB_USERNAME=${MONGO_USERNAME}
-      - DB_PASSWORD=${MONGO_PASSWORD}
+      - DB_DATABASE=${DATABASE_NAME}
+      - DB_USERNAME=${DATABASE_USERNAME}
+      - DB_PASSWORD=${DATABASE_PASSWORD}
     networks:
-        - backend
-        - database
+      - back-front
+      - db-back
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
       interval: 30s
       timeout: 10s
       retries: 5
 
-  database-mongo:
+  database:
     image: mongo
     restart: unless-stopped
-    environment:
-      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
     volumes:
-      - mongodb_data:/data/db
+      - database_volume:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
     networks:
-        - database
+      - db-back
     healthcheck:
-        test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
-        interval: 30s
-        timeout: 10s
-        retries: 5
+      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 networks:
-  default:
-  backend:
-  database:
+    default:
+    back-front:
+    db-back:
 
 volumes:
-  mongodb_data:
+  database_volume:
