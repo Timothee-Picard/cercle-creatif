@@ -18,7 +18,7 @@ init-backend:
 	else \
 		echo "No node_modules to remove in backend"; \
 	fi
-	@cd backend && npm install
+	@cd backend && npm ci
 	@if [ -f "backend/.env" ]; then \
 		echo ".env file already exists in backend, please adapt it if necessary"; \
 	elif [ -f "backend/.env.example" ]; then \
@@ -39,7 +39,7 @@ init-frontend:
 	else \
 		echo "No node_modules to remove in frontend"; \
 	fi
-	@cd frontend && npm install
+	@cd frontend && npm ci
 	@if [ -f "frontend/.env" ]; then \
 		echo ".env file already exists in frontend, please adapt it if necessary"; \
 	elif [ -f "frontend/.env.example" ]; then \
