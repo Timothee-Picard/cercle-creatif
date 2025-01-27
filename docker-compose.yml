@@ -33,9 +33,9 @@ services:
     volumes:
       - ./backend:/app
     environment:
-      - DB_TYPE=mongodb
+      - DB_TYPE=postgres
       - DB_HOST=database
-      - DB_PORT=27017
+      - DB_PORT=6432
       - DB_DATABASE=${DATABASE_NAME}
       - DB_USERNAME=${DATABASE_USERNAME}
       - DB_PASSWORD=${DATABASE_PASSWORD}
@@ -49,18 +49,19 @@ services:
       retries: 5
 
   database:
-    image: mongo
+    image: bitnami/postgresql:latest
     restart: unless-stopped
     volumes:
-      - database_volume:/data/db
+      - database_volume:/bitnami/postgresql
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${DATABASE_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${DATABASE_PASSWORD}
-      - MONGO_INITDB_DATABASE=${DATABASE_NAME}
+      - POSTGRESQL_USERNAME=${DATABASE_USERNAME}
+      - POSTGRESQL_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRESQL_DATABASE=${DATABASE_NAME}
+      - POSTGRESQL_PORT_NUMBER=6432
     networks:
       - db-back
     healthcheck:
-      test: [ "CMD", "mongosh", "--eval", "db.adminCommand('ping')" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRESQL_USERNAME} -d ${POSTGRESQL_DATABASE} -p 6432" ]
       interval: 30s
       timeout: 10s
       retries: 5
