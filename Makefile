@@ -73,5 +73,5 @@ down:
 .PHONY: logs
 logs:
 	@echo "Fetching logs for service: $(service)"
-	@if [ -z "$(service)" ]; then echo "Error: 'service' variable is required. Usage: make logs service=<service_name>"; exit 1; fi
+	@if [ -z "$(service)" ]; then $(DOCKER_COMPOSE) logs -f $(service); exit 1; fi
 	$(DOCKER_COMPOSE) logs -f $(service)
