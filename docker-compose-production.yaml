@@ -1,0 +1,11 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: production.Dockerfile
+    restart: unless-stopped
+    ports:
+      - "5000:3000"
+
+volumes:
+  database_volume:
