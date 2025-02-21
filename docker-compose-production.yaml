@@ -2,13 +2,11 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: development.Dockerfile
+      dockerfile: production.Dockerfile
     restart: unless-stopped
     depends_on:
-      backend:
-        condition: service_healthy
-    volumes:
-      - ./frontend:/app
+      - backend
+#        condition: service_healthy
     ports:
       - "5000:3000"
     environment:
@@ -16,11 +14,11 @@ services:
     networks:
       - default
       - back-front
-    healthcheck:
-        test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
-        interval: 30s
-        timeout: 10s
-        retries: 5
+#    healthcheck:
+#        test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
+#        interval: 30s
+#        timeout: 10s
+#        retries: 5
 
   backend:
     build:
@@ -30,8 +28,6 @@ services:
     depends_on:
       - database
 #        condition: service_healthy
-    volumes:
-      - ./backend:/app
     ports:
       - "5001:3000"
     environment:
@@ -44,11 +40,11 @@ services:
     networks:
       - back-front
       - db-back
-    healthcheck:
-      test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
-      interval: 30s
-      timeout: 10s
-      retries: 5
+#    healthcheck:
+#      test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
+#      interval: 30s
+#      timeout: 10s
+#      retries: 5
 
   database:
     image: bitnami/postgresql:latest
