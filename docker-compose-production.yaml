@@ -4,8 +4,6 @@ services:
       context: ./frontend
       dockerfile: production.Dockerfile
     restart: unless-stopped
-    depends_on:
-      - backend
     ports:
       - "5000:3000"
 
