@@ -1,8 +1,8 @@
 import { expect, test } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import Page from '@/app/pages/index';
+import UserPage from '@/app/user/page';
 
-test('Page', () => {
-  render(<Page />);
+test('UserPage', () => {
+  render(<UserPage />);
   expect(screen.getByRole('heading', { level: 1, name: 'Page' })).toBeDefined();
 });

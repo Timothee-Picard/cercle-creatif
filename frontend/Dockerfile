@@ -6,8 +6,8 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* .npmrc* ./
+
 RUN \
   if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
   elif [ -f package-lock.json ]; then npm ci; \
@@ -22,7 +22,17 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 RUN npm run build
 
-FROM base AS runner
+FROM base AS dev
+WORKDIR /app
+
+COPY . .
+COPY --from=deps /app/node_modules ./node_modules
+
+EXPOSE 3000
+
+CMD ["npm", "run", "dev"]
+
+FROM base AS prod
 WORKDIR /app
 
 RUN addgroup -g 1001 -S nodejs

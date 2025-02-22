@@ -2,7 +2,8 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: production.Dockerfile
+      dockerfile: Dockerfile
+      target: ${APP_ENV}
     restart: on-failure
     depends_on:
       backend:
@@ -11,7 +12,10 @@ services:
       - "3000:3000"
     networks:
       - default
-      - back-front
+    labels:
+      - traefik.http.middlewares.example-middleware.redirectregex.regex=^(http|https)://www\.(.+)
+      - traefik.http.middlewares.example-middleware.redirectregex.replacement=${1}://${2}
+      - traefik.http.middlewares.example-middleware.redirectregex.permanent=true
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
       interval: 30s
@@ -39,8 +43,13 @@ services:
       - DB_USERNAME=${DATABASE_USERNAME}
       - DB_PASSWORD=${DATABASE_PASSWORD}
     networks:
-      - back-front
+      - default
       - db-back
+    labels:
+      - traefik.http.middlewares.example-middleware.redirectregex.regex=^(http|https)://www\.(.+)
+      - traefik.http.middlewares.example-middleware.redirectregex.replacement=${1}://${2}
+      - traefik.http.middlewares.example-middleware.redirectregex.permanent=true
+
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
       interval: 30s
@@ -67,7 +76,6 @@ services:
 
 networks:
   default:
-  back-front:
   db-back:
 
 volumes:

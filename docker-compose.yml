@@ -2,34 +2,37 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: development.Dockerfile
+      dockerfile: Dockerfile
+      target: ${APP_ENV}
     restart: unless-stopped
     depends_on:
       backend:
         condition: service_healthy
-    volumes:
-      - ./frontend:/app
     ports:
       - "3001:3000"
-    environment:
-      - BACKEND_URL=http://backend:3000
+    volumes:
+      - ./frontend:/app
     networks:
       - default
-      - back-front
     healthcheck:
-        test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
-        interval: 30s
-        timeout: 10s
-        retries: 5
+      test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   backend:
     build:
       context: ./backend
-      dockerfile: development.Dockerfile
+      dockerfile: Dockerfile
+      target: ${APP_ENV}
+      args:
+        BUILD_ENV: ${APP_ENV}
     restart: unless-stopped
     depends_on:
       database:
         condition: service_healthy
+    ports:
+      - "3002:3000"
     volumes:
       - ./backend:/app
     environment:
@@ -40,7 +43,7 @@ services:
       - DB_USERNAME=${DATABASE_USERNAME}
       - DB_PASSWORD=${DATABASE_PASSWORD}
     networks:
-      - back-front
+      - default
       - db-back
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
@@ -50,7 +53,7 @@ services:
 
   database:
     image: bitnami/postgresql:latest
-    restart: unless-stopped
+    restart: always
     volumes:
       - database_volume:/bitnami/postgresql
     environment:
@@ -67,9 +70,8 @@ services:
       retries: 5
 
 networks:
-    default:
-    back-front:
-    db-back:
+  default:
+  db-back:
 
 volumes:
   database_volume:
