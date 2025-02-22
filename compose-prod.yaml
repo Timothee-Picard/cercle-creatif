@@ -12,6 +12,10 @@ services:
     networks:
       - default
       - back-front
+    labels:
+      - traefik.http.middlewares.example-middleware.redirectregex.regex=^(http|https)://www\.(.+)
+      - traefik.http.middlewares.example-middleware.redirectregex.replacement=${1}://${2}
+      - traefik.http.middlewares.example-middleware.redirectregex.permanent=true
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
       interval: 30s
@@ -41,6 +45,11 @@ services:
     networks:
       - back-front
       - db-back
+    labels:
+      - traefik.http.middlewares.example-middleware.redirectregex.regex=^(http|https)://www\.(.+)
+      - traefik.http.middlewares.example-middleware.redirectregex.replacement=${1}://${2}
+      - traefik.http.middlewares.example-middleware.redirectregex.permanent=true
+
     healthcheck:
       test: [ "CMD", "wget", "--spider", "http://backend:3000/health" ]
       interval: 30s
