@@ -6,6 +6,19 @@ services:
     restart: unless-stopped
     ports:
       - "5000:3000"
+    networks:
+      - default
+      - back-front
+    healthcheck:
+      test: [ "CMD", "wget", "--spider", "http://frontend:3000/" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+networks:
+  default:
+  back-front:
+  db-back:
 
 volumes:
   database_volume:
