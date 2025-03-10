@@ -2,15 +2,18 @@ FROM node:22.3-alpine AS build
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci
+COPY package*.json pnpm-lock.yaml ./
+RUN npm install -g pnpm
+
+RUN pnpm install --frozen-lockfile
+
 COPY . .
 
 ARG BUILD_ENV=dev
 
-RUN if [ "$BUILD_ENV" = "prod" ]; then npm run build -- -p tsconfig.build.prod.json;\
-    elif [ "$BUILD_ENV" = "preprod" ]; then npm run build -- -p tsconfig.build.json;\
-    else npm run build -- -p tsconfig.build.json; fi
+RUN if [ "$BUILD_ENV" = "prod" ]; then pnpm run build -- -p tsconfig.build.json;\
+    elif [ "$BUILD_ENV" = "preprod" ]; then pnpm run build -- -p tsconfig.build.json;\
+    else pnpm run build -- -p tsconfig.build.json; fi
 
 FROM node:22.3-alpine AS prod
 WORKDIR /app

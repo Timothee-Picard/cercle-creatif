@@ -1,5 +1,5 @@
 cd frontend && npm run format
-cd ../backend && npm run format
+cd ../backend && pnpm run format
 
 cd ..
 files=$(git diff --name-only --cached --diff-filter=d)

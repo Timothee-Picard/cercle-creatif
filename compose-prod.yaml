@@ -42,6 +42,7 @@ services:
       - DB_DATABASE=${DATABASE_NAME}
       - DB_USERNAME=${DATABASE_USERNAME}
       - DB_PASSWORD=${DATABASE_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
     networks:
       - default
       - db-back
