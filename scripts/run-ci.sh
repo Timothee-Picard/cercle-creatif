@@ -1,7 +1,7 @@
 cd frontend && npm run test:ci
 frontend_exit_code=$?
 
-cd ../backend && npm run test:ci
+cd ../backend && pnpm run test:ci
 backend_exit_code=$?
 
 if [ $frontend_exit_code -ne 0 ] || [ $backend_exit_code -ne 0 ]; then
