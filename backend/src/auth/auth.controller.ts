@@ -30,7 +30,6 @@ export class AuthController {
     return this.authService.login(req.user)
   }
 
-  @UseGuards(LocalAuthGuard)
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({
