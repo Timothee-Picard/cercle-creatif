@@ -6,6 +6,15 @@ export class User {
   id: number
 
   @Column()
+  first_name: string
+
+  @Column()
+  last_name: string
+
+  @Column({ unique: true })
+  username: string
+
+  @Column({ unique: true })
   email: string
 
   @Column()
