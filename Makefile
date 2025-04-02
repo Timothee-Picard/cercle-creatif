@@ -18,7 +18,7 @@ init-backend:
 	else \
 		echo "No node_modules to remove in backend"; \
 	fi
-	@cd backend && npm ci
+	@cd backend && pnpm install --frozen-lockfile
 	@if [ -f "backend/.env" ]; then \
 		echo ".env file already exists in backend, please adapt it if necessary"; \
 	elif [ -f "backend/.env.example" ]; then \
