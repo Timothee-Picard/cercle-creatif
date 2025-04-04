@@ -13,19 +13,30 @@ export class UsersService {
   ) {}
 
   async findOneByEmail(email: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { email } })
+    return this.usersRepository.findOne({
+      where: { email },
+      relations: ['accounts'],
+    })
   }
 
   async findOneByUsername(username: string): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { username } })
+    return this.usersRepository.findOne({
+      where: { username },
+      relations: ['accounts'],
+    })
   }
 
   async findAll(): Promise<User[]> {
-    return this.usersRepository.find()
+    return this.usersRepository.find({
+      relations: ['accounts'],
+    })
   }
 
   async findOne(id: number): Promise<User | null> {
-    return this.usersRepository.findOne({ where: { id } })
+    return this.usersRepository.findOne({
+      where: { id },
+      relations: ['accounts'],
+    })
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {
